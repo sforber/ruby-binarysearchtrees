@@ -53,30 +53,37 @@ class Tree
         end
     end
 
-    def delete(value)
-        node  = find(value)
-        return if node.nil? 
+    def delete(root = @root, value)
+        return if root.nil? 
         
-        if node.left.nil? && node.right.nil?
-            node = nil
+        if value < root.data
+            root.left = delete(root.left, value)
+        elsif value > root.data
+                root.right = delete(root.right, value)
         else
-            if node.left.nil?
-                node = node.right
-            elsif node.right.nil?
-                node = node.left
-            else
-                min_node = min_value()
-                node.data = min_node.data
-                min_node = nil
-            end            
+            if root.left.nil?
+                temp_node = root.left
+                root = nil
+                return temp_node                
+            elsif root.right.nil?
+                temp_node = root.right
+                root = nil
+                return temp_node
+            end
+        
+        temp_node = min_value(root.right)
+        root.data = temp_node.data
+        root.right = delete(root.right, value)
+
+        return root
         end
     end
 
-    def min_value
-        start_node = @root
-        #If a node to be deleted has two children then this function finds the inorder succesor which will replace it
-        #See more on the article about deleting on the TOP page.
-        
+    def min_value(root)
+        until root.left.nil?
+            root = root.left
+        end
+        return root  
     end
 
     def find(value)
@@ -96,10 +103,35 @@ class Tree
         end
     end
 
+    def level_order
+        queue = [@root]
+        values = []
+        until queue[0].nil?
+            values.append(queue[0].data)
+            queue.append(queue[0].left)
+            queue.append(queue[0].right)
+            queue.shift
+        end
+        return values
+    end
+
+    #returns an array of values with their respective techniques
+    def inorder
+
+    end
+
+    def preorder
+
+    end
+
+    def postorder
+
+    end
+
 end
 
 tree = Tree.new([1,2,3,4,5,6])
-tree.insert(7)
+print tree.level_order
 
 
 
