@@ -1,1 +1,1 @@
-Created a binary search tree class in ruby.
+Created a binary search tree class in ruby. For The Odin Project

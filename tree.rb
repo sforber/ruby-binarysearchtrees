@@ -76,6 +76,7 @@ class Tree
         start_node = @root
         #If a node to be deleted has two children then this function finds the inorder succesor which will replace it
         #See more on the article about deleting on the TOP page.
+        
     end
 
     def find(value)
