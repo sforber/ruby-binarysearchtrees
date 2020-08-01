@@ -1,0 +1,1 @@
+Created a binary search tree class in ruby.
