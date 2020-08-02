@@ -9,12 +9,12 @@ end
 
 class Tree
     attr_accessor :root
-    def initialize(arr);
-        arr = arr.uniq.sort
+    def initialize(arr)
         @root = build_tree(arr)       
     end
 
     def build_tree(arr)
+        arr = arr.uniq.sort
         return if arr.length == 0
     
         middle = arr.length / 2
@@ -59,7 +59,7 @@ class Tree
         if value < root.data
             root.left = delete(root.left, value)
         elsif value > root.data
-                root.right = delete(root.right, value)
+            root.right = delete(root.right, value)
         else
             if root.left.nil?
                 temp_node = root.left
@@ -108,33 +108,80 @@ class Tree
         values = []
         until queue[0].nil?
             values.append(queue[0].data)
-            queue.append(queue[0].left)
-            queue.append(queue[0].right)
+            unless queue[0].left.nil?
+                queue.append(queue[0].left)
+            end
+            unless queue[0].right.nil?
+                queue.append(queue[0].right)
+            end
             queue.shift
         end
         return values
     end
 
-    #returns an array of values with their respective techniques
-    def inorder
-
+    def inorder(root = @root)
+        return unless root
+        arr = []
+        arr << inorder(root.left) if root.left
+        arr << root.data
+        arr << inorder(root.right) if root.right
+        arr.flatten
     end
 
-    def preorder
-
+    def preorder(root = @root)
+        return unless root
+        arr = []
+        arr << root.data
+        arr << preorder(root.left) if root.left
+        arr << preorder(root.right) if root.right
+        arr.flatten
     end
 
-    def postorder
-
+    def postorder(root = @root)
+        return unless root
+        arr = []
+        arr << postorder(root.left) if root.left
+        arr << postorder(root.right) if root.right
+        arr << root.data
+        arr.flatten
     end
 
+    def height(root = @root)
+        return 0 if root.nil?
+        return 0 if root.left.nil? && root.right.nil?
+        return [height(root.left), height(root.right)].max + 1
+    end
+
+    def depth(node, root = @root, count = 0)
+        return 0 if node.nil?
+        return count if root == node
+        
+        count += 1
+
+        if node.data < root.data
+            return depth(node, root.left, count)
+        else
+            return depth(node, root.right, count)
+        end
+    end
+
+    def balanced?(root = @root)
+        return true if root.nil?
+
+        left_height = height(root.left)
+        right_height = height(root.right)
+        
+        if (left_height - right_height).abs <= 1 && balanced?(root.left) && balanced?(root.right)
+            return true
+        else
+            return false
+        end
+    end
+
+    def rebalance
+        arr = self.level_order
+        @root = build_tree(arr)
+    end
 end
-
-tree = Tree.new([1,2,3,4,5,6])
-print tree.level_order
-
-
-
-
 
 
